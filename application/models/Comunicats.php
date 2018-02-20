@@ -32,7 +32,6 @@ class Comunicats extends CI_Model{
 			$i++;
 		}
 		return $a;
-		
 	}
 	
 	public function loginTreballador($usuari,$clau){
@@ -135,7 +134,7 @@ class Comunicats extends CI_Model{
 		}
 	}
 	
-	public function getComunicats($dia,$clientcod,$domicili,$empreses,$dniusuari){
+	public function getComunicats($dia,$clientcod,$domicili,$empreses,$dniusuari,$antics){
 		$sql = 'SELECT oc.ComandaClient, oc.Equip, oc.Domicili, oc.CodiDepartament, oc.Exercici,oc.Serie,oc.NumeroComanda,
 		oc.CodiSeccio, e.CodiEmplaçament, e.CodiClient,e.CodiEmpresa, e.NomEmplaçament, e.Imatge, oc.Data, oc.CodiParte  
         from Emplaçaments e inner join 
@@ -143,11 +142,19 @@ class Comunicats extends CI_Model{
 		oc.CodiClient=e.CodiClient) 
 		left join OrdresFabricacio_Comunicats_Treballadors oct on(oc.CodiParte=oct.CodiParte and oc.CodiEmpresa=oct.CodiEmpresa 
 		and oc.Exercici=oct.Exercici and oc.Serie=oct.serie and oc.NumeroComanda=oct.NumeroComanda and oc.CodiSeccio=oct.CodiSeccio)  
-		where (oct.DNI=?) and oc.CodiEmpresa=? and (oc.Domicili like "%'.$domicili.'%" or e.NomEmplaçament like "%'.$domicili.'%") and (oc.Data<=? or oc.Data is NULL) and oc.DataTancament is NULL and oc.CodiClient=? 
-        group by oc.CodiParte order by oc.Data';
+		where (oct.DNI=?) and oc.CodiEmpresa=? and (oc.Domicili like "%'.$domicili.'%" or e.NomEmplaçament like "%'.$domicili.'%") and oc.DataTancament is NULL and oc.CodiClient=?';
+		
+		if($antics=='true'){
+			$sql .= 'and (oc.Data<=? or oc.Data is NULL)';
+		}
+		else if($antics=='false'){
+			$sql .= 'and (oc.Data=? or oc.Data is NULL)';
+		}
+		
+        $sql .= 'group by oc.CodiParte order by oc.Data';
 
 
-		$resultat = $this->db->query($sql,array($dniusuari,$empreses,$dia,$clientcod));
+		$resultat = $this->db->query($sql,array($dniusuari,$empreses,$clientcod,$dia));
 		
 		
 		$a = array();

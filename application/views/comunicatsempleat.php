@@ -19,6 +19,11 @@
 		</div>
 	</div>
 	</div>
+	<div class="row" style="margin-top:20px;">
+		<div class="col-xs-12 col-md-12 col-lg-12 col-sm-12">
+			<input	type="CheckBox" name="comunicats" id="Comunicats" style="font-family:helvetica;"/> Mostrar Comunicats Antics No Tancats </input>
+		</div>
+	</div>
 	<div class="row">
 	   <div class="col-xs-12 col-md-12" style="margin-top:20px;">
 			<input type="text" class="form-control" placeholder="Domicili" id="domicili"></input>
@@ -44,7 +49,7 @@
 <span class="glyphicons glyphicons-tick"></span>
 </div>
 
-		<script>
+<script>
 		
 
 		
@@ -80,7 +85,7 @@
 				$.ajax({
 						url: "<?php echo site_url()."/entrada/gettasques"; ?>",
 						method: "POST",
-						data: {dia:data,codiclient:client,domicili:domicili},
+						data: {dia:data,codiclient:client,domicili:domicili,antics:$("#Comunicats").prop('checked')},
 						success: function(resultat){
 							console.log(resultat);
 						if(resultat=='"noregistres"'){

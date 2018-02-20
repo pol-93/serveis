@@ -52,10 +52,12 @@ class Entrada extends CI_Controller {
 		$clientcod = $_POST['codiclient'];
 		
 		$domicili = $_POST["domicili"];
+		
+		$antics = $_POST["antics"];
 
 		$dia = date("Y-m-d", strtotime($dia));
 		
-		$getComunicats = $this->Comunicats->getComunicats($dia,$clientcod,$domicili,$_SESSION["empreses"],$_SESSION["dniusuari"]);
+		$getComunicats = $this->Comunicats->getComunicats($dia,$clientcod,$domicili,$_SESSION["empreses"],$_SESSION["dniusuari"],$antics);
 
 		echo json_encode($getComunicats);
 		
