@@ -27,86 +27,63 @@ class Entrada extends CI_Controller {
 	}
 
 	public function index($diaretorn=null)
-	{	
-	
-	$this->load->model("Comunicats");
-	
-	$data = array(
-		'clients' =>  $this->Comunicats->getClientsTreballador($_SESSION['empreses'],$_SESSION['dniusuari']),
-		'diaretorn' => $diaretorn,
-	);
-
-	$this->load->view("templates/header.php");
-	$this->load->view('comunicatsempleat',$data);
-
-	
-	}
-		
-			
-	public function gettasques(){
-		
+	{
 		$this->load->model("Comunicats");
-		
-		$dia = $_POST['dia'];
-		 
-		$clientcod = $_POST['codiclient'];
-		
-		$domicili = $_POST["domicili"];
-		
-		$antics = $_POST["antics"];
-
-		$dia = date("Y-m-d", strtotime($dia));
-		
-		$getComunicats = $this->Comunicats->getComunicats($dia,$clientcod,$domicili,$_SESSION["empreses"],$_SESSION["dniusuari"],$antics);
-
-		echo json_encode($getComunicats);
-		
+		if(isset($_POST["dia"]) && isset($_POST["codiclient"]) && isset($_POST["domicili"])){
+			$antics = true;
+			if (!isset($_POST["antics"])){
+					$antics=false;
+			}
+			$dia=new DateTime($_POST["dia"]);
+			$data = array(
+				'clients' =>  $this->Comunicats->getClientsTreballador($_SESSION['empreses'],$_SESSION['dniusuari']),
+				'tasques' =>  $this->gettasques($dia->format('Y-m-d'),$_POST['codiclient'],$_POST["domicili"],$antics),
+				'diaretorn' => $diaretorn,
+				'dataDP' => $dia->format('d-m-Y'),
+				'check' => $antics,
+				'domicili' => $_POST["domicili"],
+				'client' => $_POST['codiclient']
+			);
+			$_SESSION["check"] = $antics;
+			$_SESSION["domicili"] = $_POST["domicili"];
+			$_SESSION["client"] = $_POST["codiclient"];
+		}
+		else{
+			
+			$dia = new DateTime();
+			if($diaretorn!=null){
+				$dia = new DateTime($diaretorn);
+			}
+			$clients = $this->Comunicats->getClientsTreballador($_SESSION['empreses'],$_SESSION['dniusuari']);
+			$data = array(
+				'clients' =>  $clients,
+				'diaretorn' => $diaretorn,
+				'dataDP' => $dia->format('d-m-Y')
+			);
+			
+			if(isset($_SESSION["check"]) && isset($_SESSION["domicili"]) && isset($_SESSION["client"])){
+				$data["check"] = $_SESSION["check"];
+				$data["domicili"] = $_SESSION["domicili"];
+				$data["client"] = $_SESSION["client"];
+				$data["tasques"] =  $this->gettasques($dia->format('Y-m-d'),$data["client"],$data["domicili"],$data["check"]);
+				//unset($_SESSION["check"]);
+				//unset($_SESSION["domicili"]);
+				//unset($_SESSION["client"]);
+			}
+			else{
+				
+				$data["tasques"] =  $this->gettasques($dia->format('Y-m-d'),$clients[0]["CodiClient"],"",false);
+			}
+		}
+		$this->load->view("templates/header.php");
+		$this->load->view('comunicatsempleat',$data);
+	}
+				
+	public function gettasques($dia,$codiclient,$domicili,$antics){
+		$this->load->model("Comunicats");
+		return $this->Comunicats->getComunicats($dia,$codiclient,$domicili,$_SESSION["empreses"],$_SESSION["dniusuari"],$antics);
 	}
 	
-	public function fitxa(){
-		$this->load->model("Fitxar");
-		$coords = $_POST["coords"];
-		$fechaactual = getdate();
-		$ladata = "$fechaactual[year]-$fechaactual[mon]-$fechaactual[mday]";
-		$algo = $fechaactual['minutes'];
-		if($algo<10){
-			$lahora = "$fechaactual[hours]:0$fechaactual[minutes]";
-		}
-		else{
-		$lahora = "$fechaactual[hours]:$fechaactual[minutes]";
-		}
-		$lector = 'serveis.auriagrup.cat';
-		$traspassat = 0;
-		
-		if($coords!="no"){
-			$coords = explode(",", $coords);
-				$data = array(
-					'CodiFitxa' => $_SESSION["codifitxa"],
-					'Data' => $ladata,
-					'Hora' => $lahora,
-					'Longitud' => $coords[0],
-					'Altitud' => $coords[1],
-					'Lector' => $lector,
-					'Traspassat' => $traspassat
-				);
-				$this->Fitxar->fitxarTreballador($data);
-		}
-		else{
-			$data = array(
-					'CodiFitxa' => $_SESSION["codifitxa"],
-					'Data' => $ladata,
-					'Hora' => $lahora,
-					'Longitud' =>0,
-					'Altitud' => 0,
-					'Lector' => $lector,
-					'Traspassat' => $traspassat
-				);
-				$this->Fitxar->fitxarTreballador($data);
-		}	
-
-		echo "ok";
-		}
-		
 		public function reobrirparte(){
 			$this->load->model("Comunicats");
 			
@@ -120,6 +97,7 @@ class Entrada extends CI_Controller {
 		}
 		
 		public function operacionsambfotos($comunicatcod,$comunicatdate,$comunicatdatepiker,$comunicatdpt,$comunicatempresa,$comunicatexercici,$comunicatserie,$comunicatnumerocomanda,$comunicatcodiseccio,$codiemplaçament){
+
 			$this->load->model("Operacions");
 			$data = array(
 				"registres" => $this->Operacions->getOperacions($_SESSION['dniusuari'],$_SESSION['empreses'],$comunicatdate,$comunicatcod),
@@ -132,10 +110,8 @@ class Entrada extends CI_Controller {
 				"comunicatserie" => $comunicatserie,
 				"comunicatnumerocomanda" => $comunicatnumerocomanda,
 				"comunicatcodiseccio" => $comunicatcodiseccio,
-				//"linies" => $this->Operacions->getLinies($comunicatempresa,$comunicatexercici,$comunicatserie,$comunicatnumerocomanda,$comunicatcodiseccio,$comunicatcod),
 				"operacionsempl" => $this->Operacions->getOperacionsEmplaçaments($codiemplaçament,$_SESSION['empreses'],$comunicatdpt)
 			);
-			
 			
 			
 			$this->load->view("templates/header.php");

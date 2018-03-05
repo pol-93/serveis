@@ -133,7 +133,7 @@ class Comunicats extends CI_Model{
 			return $a;
 		}
 	}
-	
+
 	public function getComunicats($dia,$clientcod,$domicili,$empreses,$dniusuari,$antics){
 		$sql = 'SELECT oc.ComandaClient, oc.Equip, oc.Domicili, oc.CodiDepartament, oc.Exercici,oc.Serie,oc.NumeroComanda,
 		oc.CodiSeccio, e.CodiEmplaçament, e.CodiClient,e.CodiEmpresa, e.NomEmplaçament, e.Imatge, oc.Data, oc.CodiParte  
@@ -142,60 +142,79 @@ class Comunicats extends CI_Model{
 		oc.CodiClient=e.CodiClient) 
 		left join OrdresFabricacio_Comunicats_Treballadors oct on(oc.CodiParte=oct.CodiParte and oc.CodiEmpresa=oct.CodiEmpresa 
 		and oc.Exercici=oct.Exercici and oc.Serie=oct.serie and oc.NumeroComanda=oct.NumeroComanda and oc.CodiSeccio=oct.CodiSeccio)  
-		where (oct.DNI=?) and oc.CodiEmpresa=? and (oc.Domicili like "%'.$domicili.'%" or e.NomEmplaçament like "%'.$domicili.'%") and oc.DataTancament is NULL and oc.CodiClient=?';
-		
-		if($antics=='true'){
+		where (oct.DNI=?) and oc.CodiEmpresa=? and (oc.Domicili like "%'.$domicili.'%" or e.NomEmplaçament like "%'.$domicili.'%") and oc.DataTancament is NULL and oc.CodiClient=? ';
+
+		if($antics==true){
 			$sql .= 'and (oc.Data<=? or oc.Data is NULL)';
 		}
-		else if($antics=='false'){
+		
+		else if($antics==false){
 			$sql .= 'and (oc.Data=? or oc.Data is NULL)';
 		}
 		
         $sql .= 'group by oc.CodiParte order by oc.Data';
 
-
 		$resultat = $this->db->query($sql,array($dniusuari,$empreses,$clientcod,$dia));
 		
+		$resultat = $resultat->result_array();
 		
-		$a = array();
-		$i=0;
+		$this->Imatges($resultat);
+		
+		return $resultat;
+		
+		
+		
+		
+		
+		// $resultat;
+		// $a = array();
+		// $i=0;
 			
-		foreach($resultat->result_array() as $r){		
-			$a[$i][0] = $r["CodiEmplaçament"];
-			$a[$i][1] = $r["CodiClient"];
-			$a[$i][2] = $r["CodiEmpresa"];
-			$a[$i][3] = $r["NomEmplaçament"];
-			if($r["Imatge"]==''){
-				$a[$i][4] = null;
-			}
-			else{
-				$img = $this->generaFoto($r["Imatge"]);
-				$a[$i][4] = 'src="data:image/jpg;base64,'.base64_encode($img).'"';
-			}
-			$a[$i][5] = $r["Data"];
-			//$a[$i][6] = $r["CodiOperacio"];
-			//$a[$i][7] = $r["NomOperacio"];
-			$a[$i][8] = $r["CodiParte"];
-			$a[$i][10] =$r["Equip"];
-			$a[$i][11] =$r["Exercici"];
-			$a[$i][12] =$r["Serie"];
-			$a[$i][13] =$r["NumeroComanda"];
-			$a[$i][14] =$r["CodiSeccio"];
-			$a[$i][15] =$r["Domicili"];
-			$a[$i][16] =$r["CodiDepartament"];
-			$a[$i][17] =$r["ComandaClient"];
-			$i++;
-		}
-		if($i==0){
-			return "noregistres";
-			exit;
-		}
-		else{
-			return $a;
-		}
+		// foreach($resultat->result_array() as $r){		
+			// $a[$i][0] = $r["CodiEmplaçament"];
+			// $a[$i][1] = $r["CodiClient"];
+			// $a[$i][2] = $r["CodiEmpresa"];
+			// $a[$i][3] = $r["NomEmplaçament"];
+			// if($r["Imatge"]==''){
+				// $a[$i][4] = null;
+			// }
+			// else{
+				// $img = $this->generaFoto($r["Imatge"]);
+				// $a[$i][4] = 'src="data:image/jpg;base64,'.base64_encode($img).'"';
+			// }
+			// $a[$i][5] = $r["Data"];
+			// $a[$i][6] = $r["CodiOperacio"];
+			// $a[$i][7] = $r["NomOperacio"];
+			// $a[$i][8] = $r["CodiParte"];
+			// $a[$i][10] =$r["Equip"];
+			// $a[$i][11] =$r["Exercici"];
+			// $a[$i][12] =$r["Serie"];
+			// $a[$i][13] =$r["NumeroComanda"];
+			// $a[$i][14] =$r["CodiSeccio"];
+			// $a[$i][15] =$r["Domicili"];
+			// $a[$i][16] =$r["CodiDepartament"];
+			// $a[$i][17] =$r["ComandaClient"];
+			// $i++;
+		// }
+		// if($i==0){
+			// return "noregistres";
+			// exit;
+		// }
+		// else{
+			// return $a;
+		// }
 	}
 	
-	
+	public function Imatges(&$data){
+		for ($i=0; $i<count($data);$i++){
+			if($data[$i]["Imatge"]=='' || $data[$i]["Imatge"] == null){
+				$data[$i]["Imatge"] = null;
+			}else{
+				$img = $this->generaFoto($data[$i]["Imatge"]);
+				$data[$i]["Imatge"]= 'src="data:image/jpg;base64,'.base64_encode($img).'"';
+			}
+		}
+	}
 	
 	public function generaFoto($dadesImatge) {
 		$source= imagecreatefromstring($dadesImatge);
@@ -213,7 +232,6 @@ class Comunicats extends CI_Model{
 		}
 		else {
 			return 'NO';
-
 		}	
 	}
 	
