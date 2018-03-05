@@ -72,10 +72,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 $active_group = 'default';
 $query_builder = TRUE;
-
+//91.121.151.193
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => '91.121.151.193',
+	'hostname' => 'localhost',
 	'username' => 'auriasoft',
 	'password' => 'G35t10$16',
 	'database' => 'AuriaSoft',
