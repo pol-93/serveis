@@ -66,12 +66,8 @@ class Entrada extends CI_Controller {
 				$data["domicili"] = $_SESSION["domicili"];
 				$data["client"] = $_SESSION["client"];
 				$data["tasques"] =  $this->gettasques($dia->format('Y-m-d'),$data["client"],$data["domicili"],$data["check"]);
-				//unset($_SESSION["check"]);
-				//unset($_SESSION["domicili"]);
-				//unset($_SESSION["client"]);
 			}
 			else{
-				
 				$data["tasques"] =  $this->gettasques($dia->format('Y-m-d'),$clients[0]["CodiClient"],"",false);
 			}
 		}
@@ -86,18 +82,12 @@ class Entrada extends CI_Controller {
 	
 		public function reobrirparte(){
 			$this->load->model("Comunicats");
-			
 			$dataactual = $_POST["dataactual"];
-			
-			
 			$retorn = $this->Comunicats->ReobrirParte($dataactual,$_SESSION['dniusuari']);		
-			
 			echo $retorn;
-			
 		}
 		
 		public function operacionsambfotos($comunicatcod,$comunicatdate,$comunicatdatepiker,$comunicatdpt,$comunicatempresa,$comunicatexercici,$comunicatserie,$comunicatnumerocomanda,$comunicatcodiseccio,$codiemplaçament){
-
 			$this->load->model("Operacions");
 			$data = array(
 				"registres" => $this->Operacions->getOperacions($_SESSION['dniusuari'],$_SESSION['empreses'],$comunicatdate,$comunicatcod),
@@ -175,12 +165,19 @@ class Entrada extends CI_Controller {
 				$arxiu = file_get_contents($_FILES['arxiuFotoDespres']['tmp_name']);
 			}
 		
+		
+			
+			
 			
 			$propera = $this->Operacions->getproperid($codiempresa,$codiexercici,$codiserie,$codinumerocomanda,$codiseccio,$codiparte,$tipusFotos);
 			
+			
 			$this->Operacions->Insereiximatge($codiempresa,$codiexercici,$codiserie,$codinumerocomanda,$codiseccio,$codiparte,$propera,$tipusFotos,$extensio,$arxiu);
 			
+			
 			$modificacio = 1;
+			
+			
 			
 			$this->Operacions->updateDataModificacioComunicat($modificacio,$codiempresa,$codiexercici,$codiserie,$codinumerocomanda,$codiseccio,$codiparte);
 	

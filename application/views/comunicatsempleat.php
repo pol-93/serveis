@@ -75,14 +75,19 @@
 		<div id="tot" style="margin-top:20px;" class="col-xs-8 col-xs-offset-2 col-md-8 col-md-offset-2">
 		<?php
 		if(count($tasques) == 0){
-			echo "<p> Avui no tens cap comunicat amb aquest client </p>";
+			echo "<p> No tens cap comunicat obert aquest dia amb aquest client </p>";
+			echo '<br>';
+			echo '<input type="button" class="btn btn-danger" style="margin:0px auto" value="REOBRIR COMUNICAT" onclick="reobrir()"/>';
 		}else{
 		$aux = $tasques[0]["CodiParte"];	
 		$i=0;
+		
+		echo "tasques totals: " . count($tasques);
+		
 		for ($i=0; $i < count($tasques); $i++) {
 						?>
 								<div class="row" style="padding:2px;padding-right:6px;margin-bottom:25px;">		
-									<a href="<?php echo site_url().'/entrada/operacionsambfotos/'.$tasques[$i]["CodiParte"].'/'.$tasques[$i]["Data"].'/'.$dataDP.'/'.$tasques[$i]["CodiDepartament"].'/'.$tasques[$i]["CodiEmpresa"].'/'.$tasques[$i]["CodiEmpresa"].'/'.$tasques[$i]["Serie"].'/'.$tasques[$i]["NumeroComanda"].'/'.$tasques[$i]["CodiSeccio"].'/'.$tasques[$i]["CodiEmplaçament"]; ?>">
+									<a href="<?php echo site_url().'/entrada/operacionsambfotos/'.$tasques[$i]["CodiParte"].'/'.$tasques[$i]["Data"].'/'.$dataDP.'/'.$tasques[$i]["CodiDepartament"].'/'.$tasques[$i]["CodiEmpresa"].'/'.$tasques[$i]["Exercici"].'/'.$tasques[$i]["Serie"].'/'.$tasques[$i]["NumeroComanda"].'/'.$tasques[$i]["CodiSeccio"].'/'.$tasques[$i]["CodiEmplaçament"]; ?>">
 								<Button class="col-md-12 col-sm-12 col-xs-12 visible-xs visible-md visible-sm visible-lg emplasaments btn btn-gris">
 								<?php 
 								if($tasques[$i]["Imatge"]!=null){

@@ -373,6 +373,9 @@
 		}
 		
 		function EnviarFoto(foto,formulari){
+			
+			
+			
 			var file = foto.files[0];
 			
 			if (file.type=='image/jpeg' || file.type=='image/png' || file.type=='image/gif'){
@@ -390,9 +393,12 @@
 					image.src = reader.result;
 
 					image.onload = function() {
-						
+				
 							var oc = document.createElement('canvas'),
 									octx = oc.getContext('2d');
+									
+									console.log("height imatge : " + image.height);
+									console.log("width imatge : " + image.width);
 								if(image.height > 1024 && image.width > 768 || image.height > 768 && image.width > 1024){	
 									if(image.height > image.width){
 										canvas.height = 1024;
@@ -436,9 +442,9 @@
 								ctx.drawImage(oc, 0, 0, oc.width, oc.height,
 								0, 0, canvas.width, canvas.height);
 								
-		
+							
 								canvas.toBlob(function(blob) {
-								  
+									console.log(blob);
 									idemplasament = $("#bototancar");
 									var nomarxiu = file.name;
 									var extension = file.type;
@@ -465,6 +471,7 @@
 										success: function (returndata) {
 											console.log(returndata);
 											var algo = jQuery.parseJSON(returndata);
+											
 											if($(foto).attr("data-valor")=="Abans"){
 												$("#fotosabans").prepend('<div style="position:relative;" data-codiempresa="'+algo[0]+'" data-exercici="'+algo[1]+'" data-serie="'+algo[2]+'" data-numerocomanda="'+algo[3]+'" data-seccio="'+algo[4]+'" data-parte="'+algo[5]+'" data-tipusfotos="'+algo[7]+'" data-ordrefotos="'+algo[6]+'" onclick="borrar(this)"><div class="btn btn-danger" style="position:absolute;bottom:5px;left:80%;"> <i class="fa fa-trash" aria-hidden="true"></i></div><img style="display:block;margin-bottom:10px;border:2px solid black;" width="100%" '+algo[8]+'/></div>');		
 												document.getElementById("file").value = "";

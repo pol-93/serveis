@@ -260,11 +260,11 @@ class Operacions extends CI_Model{
 			   'CodiSeccio' => $codiseccio,
 			   'CodiParte' => $codiparte,
 			   'OrdreFotos' => $propera,
-			   'TipusFotos' => $tipusFotos,
+			   'TipusFotos' => $tipusFotos,  
 			   'Foto' => $arxiu,
 			   'Extensio' => $extensio,
 		   );
-		   $this->db->insert('OrdresFabricacio_Comunicats_Fotos', $data); 
+		   $this->db->insert('OrdresFabricacio_Comunicats_Fotos', $data); 		    
 	}
 	
 	public function updateDataModificacioComunicat($modificacio,$codiempresa,$codiexercici,$codiserie,$codinumerocomanda,$codiseccio,$codiparte){
