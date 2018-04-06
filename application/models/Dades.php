@@ -274,20 +274,51 @@ class Dades extends CI_Model{
 		}
 		
 		public function getClients($CodiEmpresa,$codiusuari){
-			$sql = "select * from Clients c join UsuarisEmpreses ue on (ue.CodiClient=c.CodiClient and ue.CodiEmpresa=c.CodiEmpresa) where ue.CodiUsuari=? and ue.permis='demandes' and ue.CodiEmpresa=? group by ue.CodiClient";
+			$sql = "select * from UsuarisEmpreses ue where ue.CodiUsuari=? and ue.permis='demandes' and ue.CodiEmpresa=? group by ue.CodiUsuari";
+			
 			$resultat = $this->db->query($sql,array($codiusuari,$CodiEmpresa));
 			$a = array();
 			$i=0;
+			$aux = 0;
 			foreach($resultat->result_array() as $r){		
-				$a[$i]["CodiUsuari"] = $r["CodiUsuari"];
-				$a[$i]["CodiEmpresa"] = $r["CodiEmpresa"];
-				$a[$i]["CodiClient"] = $r["CodiClient"];
-				$a[$i]["Permis"] = $r["permis"];
-				$a[$i]["RaoSocial1"] = $r["RaoSocial1"];
-				$a[$i]["RaoSocial2"] = $r["RaoSocial2"];
-				$i++;
+				if($r["CodiClient"]==''){
+					$aux = 1;
+					break;
+				}
 			}
+			if($aux==1){
+				$sql = "SELECT c.* FROM Clients c join Demandes_serveis ds on (ds.CodiEmpresa=c.CodiEmpresa and ds.CodiClient=c.CodiClient) where ds.CodiEmpresa=8 group by c.CodiClient ";
+				$resultat = $this->db->query($sql,array($CodiEmpresa));
+				$a = array();
+				$i=0;
+				foreach($resultat->result_array() as $r){		
+					//$a[$i]["CodiUsuari"] = $r["CodiUsuari"];
+					$a[$i]["CodiEmpresa"] = $r["CodiEmpresa"];
+					$a[$i]["CodiClient"] = $r["CodiClient"];
+					//$a[$i]["Permis"] = $r["permis"];
+					$a[$i]["RaoSocial1"] = $r["RaoSocial1"];
+					$a[$i]["RaoSocial2"] = $r["RaoSocial2"];
+					$i++;
+				}
+					return $a;
+				
+			}
+			else{
+				$sql = "select * from Clients c join UsuarisEmpreses ue on (ue.CodiClient=c.CodiClient and ue.CodiEmpresa=c.CodiEmpresa) where ue.CodiUsuari=? and ue.permis='demandes' and ue.CodiEmpresa=? group by ue.CodiClient";
+				$resultat = $this->db->query($sql,array($codiusuari,$CodiEmpresa));
+				$a = array();
+				$i=0;
+				foreach($resultat->result_array() as $r){		
+					$a[$i]["CodiUsuari"] = $r["CodiUsuari"];
+					$a[$i]["CodiEmpresa"] = $r["CodiEmpresa"];
+					$a[$i]["CodiClient"] = $r["CodiClient"];
+					$a[$i]["Permis"] = $r["permis"];
+					$a[$i]["RaoSocial1"] = $r["RaoSocial1"];
+					$a[$i]["RaoSocial2"] = $r["RaoSocial2"];
+					$i++;
+				}
 				return $a;
+			}
 		}
 			
 		
