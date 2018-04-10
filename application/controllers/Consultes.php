@@ -51,11 +51,11 @@ class Consultes extends CI_Controller{
 		$this->load->model("Dades");
 		$datainici = $_POST['datainici'];
 		$datafi = $_POST['datafi'];
-		//$datainici = "05-10-2017";
-		//$datafi= "26-10-2017";
+		$codiEmpresa = $_POST['codiEmpresa'];
+		$codiClient = $_POST['codiClient'];
 		$datainici = date("Y-m-d", strtotime($datainici));
 		$datafi = date("Y-m-d", strtotime($datafi));		
-		$comunicats = $this->Dades->getComunicats($_SESSION['CodiUsuari'],$_SESSION["empreses"],$datainici,$datafi);
+		$comunicats = $this->Dades->getComunicats($_SESSION['CodiUsuari'],$codiEmpresa,$codiClient,$datainici,$datafi);
 		echo $comunicats;
 	}
 	

@@ -37,10 +37,34 @@
 		<div id="consultac">
 			<div class="row">
 				<div class="col-md-12">
-					<p>	Consultar Comunicats entre dues dates </p>
+					<p style="font-family:helvetica;font-size:20px;margin:10px 0px 10px 0px;">	Consultar Comunicats </p>
+					<div style="overflow:auto;">
+					<div style="float:left;margin-top:10px;margin-bottom:20px;width:300px;clear:both;">
+						<select class="form-control" id="empresacomunicats" onchange="getclients(this,'#clientcomunicats')">
+							<option disabled selected> Seleccionar un Empresa ..</option>
+							<?php 
+								for($i=0;$i<count($desti);$i++){
+									echo '<option value="'.$desti[$i]["CodiEmpresa"].'">'.$desti[$i]["nomEmpresa"].'</option>';
+								}
+							?>
+						</select>
+					</div>
+					<div style="float:left;margin-top:10px;margin-left:20px;margin-bottom:20px;width:300px;">
+						<select class="form-control"id="clientcomunicats">
+							<option disabled selected> Seleccionar Client ..</option>
+							<?php
+								for($i=0;$i<count($clients);$i++){
+									echo '<option value="'.$clients[$i]["CodiClient"].'">'.$clients[$i]["Descripcio"].'</option>';
+								}
+							?>
+						</select>
+					</div>
+					</div>
+					<div style="overflow:auto;">
 					<div style="width:200px;float:left;"><p id="posardata">Data inici: <input type="text" id="datepicker"></p></div>
 					<div style="width:200px;float:left;"><p id="posardata">Data Final: <input type="text" id="datepicker2"></p></div>
-					<div><input style="margin-top:20px;" type="button" id="botoquery" onclick="getcomunicats()" value="Rebre comunicats"/></div>
+					</div>
+					<div><input style="margin-top:20px;" class="btn btn-default" type="button" id="botoquery" onclick="getcomunicats()" value="Rebre comunicats"/></div>
 				</div>
 			</div>
 			<div style="margin-top:20px;" class="row">
@@ -202,7 +226,7 @@
 	
 		
 	<?php
-		if (strpos($_SESSION['permis'], 'consultes_fitxatges') !== false){
+		if (strpos($_SESSION['permis'], 'consultes') !== false){
 	?>
 	
 	function incidencies(){
@@ -211,9 +235,14 @@
 	
 	function getcomunicats(){
 			$('#loading-image').show();
+			if($("#clientcomunicats").val() == null && $("#empresacomunicats").val() == null){
+				alert("es obligatori seleccionar la empresa i el client");
+				$('#loading-image').hide();                                                                         
+				return;
+			}
 			$.ajax({
 				url: "<?php echo site_url("Consultes/obtenircomunicats"); ?>",
-				data:{datainici:$("#datepicker").val(),datafi:$("#datepicker2").val()},
+				data:{datainici:$("#datepicker").val(),datafi:$("#datepicker2").val(),codiEmpresa:$("#empresacomunicats").val(),codiClient:$("#clientcomunicats").val()},
 				method: "POST",
 				success: function(resultat){
 					$('#loading-image').hide();
@@ -227,13 +256,14 @@
 						var lastring="";			
 						lastring+='<div class="table-responsive">';
 						lastring+='<table class="table">';
-						lastring+='<thead><tr><th>Nom Emplaçament</th><th>Domicili</th><th>Nom Operacio</th><th> Data Planificacio </th><th>Data Tancament</th><th>estat</th></th><th>Fotos</th></tr></thead>';
-						for (var i = 0; i < algo.length; i++) {
+						lastring+='<thead><tr><th>Nom Emplaçament</th><th>Domicili</th><th>Nom Operacio</th><th>Nom Operari</th><th> Data Planificacio </th><th>Data Tancament</th><th>estat</th></th><th>Fotos</th></tr></thead>';
+						for(var i = 0; i < algo.length; i++) {
 								lastring+='<tbody>';
 							    lastring+='<tr>';
 								lastring+='<td>'+algo[i][0]+'</td>';
 								lastring+='<td>'+algo[i][12]+'</td>';
 								lastring+='<td>'+algo[i][1]+'</td>';
+								lastring+='<td>'+algo[i][13]+'</td>';
 								lastring+='<td>'+algo[i][2]+'</td>';
 								lastring+='<td>'+algo[i][3]+'</td>';
 								if(algo[i][4]!=0){

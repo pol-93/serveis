@@ -17,9 +17,9 @@ class Dades extends CI_Model{
         $mysqli=null;
     }
 
-    public function getComunicats($usuari,$empresa,$datainici,$datafi) {
+    public function getComunicats($usuari,$empresa,$client,$datainici,$datafi) {
 
-		$sql = "SELECT e.NomEmplaçament, oc.Domicili, op.NomOperacio, oc.Data, if (oc.DataTancament is null or oc.DataTancament = '0000-00-00 00:00:00', \"\", oc.DataTancament) as DataTancament, oc.CodiEmpresa, oc.Exercici, oc.Serie, 
+		$sql = "SELECT e.NomEmplaçament, ofct.NomTreballador, oc.Domicili, op.NomOperacio, oc.Data, if (oc.DataTancament is null or oc.DataTancament = '0000-00-00 00:00:00', \"\", oc.DataTancament) as DataTancament, oc.CodiEmpresa, oc.Exercici, oc.Serie, 
 				oc.NumeroComanda, oc.CodiSeccio ,oc.CodiParte, if (((sum(ocol.HoresReals) > 0 and oc.DataTancament is not null) or (ocol.HoresReals = 0 and ocol.HoresPlanificades = 0 and oc.DataTancament is not null)), 1, 0) as fet,if (count(ocf.CodiParte)=0, \"\",\"fotos\")
 				as numerofotos 
 			    from Emplaçaments e inner join OrdresFabricacio_Comunicats oc on (oc.CodiEmpresa=e.CodiEmpresa and oc.CodiEmplaçament=e.CodiEmplaçament
@@ -31,17 +31,19 @@ class Dades extends CI_Model{
 				inner join Operacions op on (ocol.CodiOperacio=op.CodiOperacio and ocol.CodiEmpresa=op.CodiEmpresa and 
 					ocol.CodiDepartament=op.CodiDepartament)
 		
-				inner join UsuarisEmpreses ue on (ue.CodiEmpresa=oc.CodiEmpresa and ue.CodiClient=oc.Codiclient) 
-        
 				left join OrdresFabricacio_Comunicats_Fotos ocf on (ocf.CodiEmpresa=oc.CodiEmpresa and ocf.Exercici=oc.Exercici and 		    				  
 					ocf.Serie=oc.Serie and ocf.NumeroComanda=oc.NumeroComanda and ocf.CodiParte=oc.CodiParte)
+                    
+				inner join OrdresFabricacio_Comunicats_Treballadors ofct on(ofct.CodiEmpresa=oc.CodiEmpresa and ofct.Exercici=oc.Exercici and 
+				ofct.Serie=oc.Serie and ofct.NumeroComanda=oc.NumeroComanda and ofct.CodiSeccio=oc.CodiSeccio and ofct.CodiParte=oc.CodiParte)
+					
+				WHERE oc.CodiEmpresa=? and oc.CodiClient=? and (oc.Data between ? and ? or oc.DataTancament between ? and ?) 
 				
-				WHERE ue.CodiUsuari=? and op.CodiEmpresa=? and (oc.Data between ? and ? or oc.DataTancament between ? and ?) 
 				group by  e.NomEmplaçament, oc.Domicili, op.NomOperacio, oc.Data, oc.DataTancament
 				order by oc.DataTancament";
 		
 		
-		$resultat = $this->db->query($sql, array($usuari,$empresa, $datainici, $datafi,$datainici,$datafi));
+		$resultat = $this->db->query($sql, array($empresa, $client,$datainici, $datafi,$datainici,$datafi));
 		
 		
 		
@@ -66,6 +68,7 @@ class Dades extends CI_Model{
 				$a[$i][10] = $row["CodiParte"];
 				$a[$i][11] = $row["numerofotos"];
 				$a[$i][12] = $row["Domicili"];
+				$a[$i][13] = $row["NomTreballador"];
 				$i++;
             }
         }
@@ -73,7 +76,7 @@ class Dades extends CI_Model{
 			echo json_encode($a);
 		}
 		else{
-			echo "XD";
+			echo "error";
 		}
     }
 	
