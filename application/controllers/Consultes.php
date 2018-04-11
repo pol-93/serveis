@@ -194,42 +194,44 @@ class Consultes extends CI_Controller{
 		$this->load->model("Dades");
 		
 		$nomclient = $this->Dades->getnomclient($client,$desti);
+		echo var_dump($correus);
 			for($i=0;$i<count($correus);$i++){
-				echo var_dump($correus);
-		$this->load->model("verificacio");
-		
-		$mail = new phpmailer(true); // create a new object
-		$mail->IsSMTP(); // enable SMTP
-		$mail->SMTPDebug = 2; // debugging: 1 = errors and messages, 2 = messages only
-		$mail->Helo = "serveis.auriagrup.cat";
-		$mail->SMTPAuth = true; // authentication enabled
-		$mail->Port=25;
-		//$mail->SMTPSecure = 'tls';
-		$mail->SMTPSecure = 'ssl'; // secure transfer enabled REQUIRED for GMail
-		$mail->Host = "smtp.gmail.com"; //smtp.1and1.es
-		$mail->Port = 465; // or 587 465
-		$mail->IsHTML(true);
-		$mail->Username = "infoserveis@auriagrup.cat";// undealclothing@undealclothing.com
-		$mail->Password = "info20ser17veis";
-		//$email->FromName = "Àuria grup Serveis";
-		//$mail->SetFrom("infoserveis@auriagrup.cat"); // undealclothing@undealclothing.com
-		$mail->setFrom('infoserveis@auriagrup.cat', utf8_decode('Àuria grup Serveis'));
-		$mail->Subject = 'Demanda internet amb el codi '.$iddemanda.' s\'ha creat';
-		for($k=0;$k<count($arxius);$k++){
-			$mail->AddStringAttachment($arxius[$k][0],$arxius[$k][2],'base64',$arxius[$k][1]);
-		}
-		$mail->Body = '<p>Demanda del client : '.$nomclient.'</p> <p>Remitent : '. $_SESSION["NomRealUsuari"] .' </p> Data demanda: '.$data.' </p><p> Codi demanda:  '.$iddemanda.'</p><p> Lloc:  '.$lloc.' </p> <p> Descripció: '.$descripcio.'</p>';
-		//$mail->Body = '<h1><b>Nova Demanda Del Client : '.$nomclient.' </b></h1><h2> Remitent : '. $_SESSION["NomRealUsuari"] .' </h2> <h2>Data Demanda: '.$data.'</h2><h2>Codi Demanda: '.$iddemanda.'</h2> <h3>Lloc:  </h3>'.$lloc.' <h3> Descripció: </h3> '.$descripcio;
-			$mail->AddAddress($correus[$i][0]);
-			if(!$mail->Send())
-			{
-				echo "hola";
-				return "Mailer Error: " . $mail->ErrorInfo;
-			}
-		}
+				if($correus[$i][0]!=""){		
+					$this->load->model("verificacio");
+					
+					$mail = new phpmailer(true); // create a new object
+					$mail->IsSMTP(); // enable SMTP
+					$mail->SMTPDebug = 2; // debugging: 1 = errors and messages, 2 = messages only
+					$mail->Helo = "serveis.auriagrup.cat";
+					$mail->SMTPAuth = true; // authentication enabled
+					$mail->Port=25;
+					$mail->SMTPSecure = 'tls';
+					$mail->SMTPSecure = 'ssl'; // secure transfer enabled REQUIRED for GMail
+					$mail->Host = "smtp.gmail.com"; //smtp.1and1.es
+					$mail->Port = 465; // or 587 465
+					$mail->IsHTML(true);
+					$mail->Username = "infoserveis@auriagrup.cat";// undealclothing@undealclothing.com
+					$mail->Password = "info20ser17veis";
+					$email->FromName = "Àuria grup Serveis";
+					$mail->SetFrom("infoserveis@auriagrup.cat"); // undealclothing@undealclothing.com
+					$mail->setFrom('infoserveis@auriagrup.cat', utf8_decode('Àuria grup Serveis'));
+					$mail->Subject = 'Demanda internet amb el codi '.$iddemanda.' s\'ha creat';
+					for($k=0;$k<count($arxius);$k++){
+						$mail->AddStringAttachment($arxius[$k][0],$arxius[$k][2],'base64',$arxius[$k][1]);
+					}
+					$mail->Body = '<p>Demanda del client : '.$nomclient.'</p> <p>Remitent : '. $_SESSION["NomRealUsuari"] .' </p> Data demanda: '.$data.' </p><p> Codi demanda:  '.$iddemanda.'</p><p> Lloc:  '.$lloc.' </p> <p> Descripció: '.$descripcio.'</p>';
+					$mail->Body = '<h1><b>Nova Demanda Del Client : '.$nomclient.' </b></h1><h2> Remitent : '. $_SESSION["NomRealUsuari"] .' </h2> <h2>Data Demanda: '.$data.'</h2><h2>Codi Demanda: '.$iddemanda.'</h2> <h3>Lloc:  </h3>'.$lloc.' <h3> Descripció: </h3> '.$descripcio;
+						$mail->AddAddress($correus[$i][0]);
+						if(!$mail->Send())
+						{
+							echo "hola";
+							return "Mailer Error: " . $mail->ErrorInfo;
+						}
+					}
 
-		$this->session->set_userdata('missatge', 'Revisa tu correo electronico');
-		//redirect('/admin/recuperarpassword', 'refresh');
+					$this->session->set_userdata('missatge', 'Revisa tu correo electronico');
+		}
+		redirect('/admin/recuperarpassword', 'refresh');
 	}
 	
 	public function obtenirfitxades(){
