@@ -194,7 +194,6 @@ class Consultes extends CI_Controller{
 		$this->load->model("Dades");
 		
 		$nomclient = $this->Dades->getnomclient($client,$desti);
-		echo var_dump($correus);
 			for($i=0;$i<count($correus);$i++){
 				if($correus[$i][0]!=""){		
 					$this->load->model("verificacio");
