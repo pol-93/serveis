@@ -227,6 +227,7 @@ class Entrada extends CI_Controller {
 		$material = $_POST['material'];
 		$datatancament = $_POST["datatancament"];
 		$detall = $_POST["detall"];
+		$domicili = $_POST["domicili"];
 
 		
 
@@ -240,7 +241,7 @@ class Entrada extends CI_Controller {
 		$dataavui->setTimeZone(new DateTimeZone("Europe/Madrid"));
 		$dataavui = $dataavui->format('Y-m-d');
 		
-		$this->Operacions->tancarparte($datausuari,$dataavui,$datatancament,$coords,$material,$tancarparte,$empresacod,$exercici,$serie,$numerocomanda,$codiseccio,$detall);
+		$this->Operacions->tancarparte($datausuari,$dataavui,$datatancament,$coords,$material,$tancarparte,$empresacod,$exercici,$serie,$numerocomanda,$codiseccio,$detall,$domicili);
 			
 		}
 		

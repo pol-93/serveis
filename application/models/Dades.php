@@ -22,23 +22,18 @@ class Dades extends CI_Model{
 		$sql = "SELECT e.NomEmplaçament, ofct.NomTreballador, oc.Domicili, op.NomOperacio, oc.Data, if (oc.DataTancament is null or oc.DataTancament = '0000-00-00 00:00:00', \"\", oc.DataTancament) as DataTancament, oc.CodiEmpresa, oc.Exercici, oc.Serie, 
 				oc.NumeroComanda, oc.CodiSeccio ,oc.CodiParte, if (((sum(ocol.HoresReals) > 0 and oc.DataTancament is not null) or (ocol.HoresReals = 0 and ocol.HoresPlanificades = 0 and oc.DataTancament is not null)), 1, 0) as fet,if (count(ocf.CodiParte)=0, \"\",\"fotos\")
 				as numerofotos 
-			    from Emplaçaments e inner join OrdresFabricacio_Comunicats oc on (oc.CodiEmpresa=e.CodiEmpresa and oc.CodiEmplaçament=e.CodiEmplaçament
+				from OrdresFabricacio_Comunicats oc left outer join OrdresFabricacio_Comunicats_Treballadors ofct on(ofct.CodiEmpresa=oc.CodiEmpresa and 
+				ofct.Exercici=oc.Exercici and ofct.Serie=oc.Serie and ofct.NumeroComanda=oc.NumeroComanda and ofct.CodiSeccio=oc.CodiSeccio and 
+				ofct.CodiParte=oc.CodiParte)
+			    inner join Emplaçaments e on (oc.CodiEmpresa=e.CodiEmpresa and oc.CodiEmplaçament=e.CodiEmplaçament
 					and oc.CodiClient=e.CodiClient) 
-		
-				inner join OrdresFabricacio_Comunicats_Operacions_Linies ocol on(oc.CodiParte=ocol.CodiParte and oc.CodiEmpresa=ocol.CodiEmpresa 
+				left join OrdresFabricacio_Comunicats_Operacions_Linies ocol on(oc.CodiParte=ocol.CodiParte and oc.CodiEmpresa=ocol.CodiEmpresa 
 					and oc.Serie=ocol.Serie and oc.Exercici=ocol.Exercici and oc.NumeroComanda=ocol.NumeroComanda and oc.CodiSeccio=ocol.CodiSeccio) 
-		
-				inner join Operacions op on (ocol.CodiOperacio=op.CodiOperacio and ocol.CodiEmpresa=op.CodiEmpresa and 
+				left join Operacions op on (ocol.CodiOperacio=op.CodiOperacio and ocol.CodiEmpresa=op.CodiEmpresa and 
 					ocol.CodiDepartament=op.CodiDepartament)
-		
 				left join OrdresFabricacio_Comunicats_Fotos ocf on (ocf.CodiEmpresa=oc.CodiEmpresa and ocf.Exercici=oc.Exercici and 		    				  
 					ocf.Serie=oc.Serie and ocf.NumeroComanda=oc.NumeroComanda and ocf.CodiParte=oc.CodiParte)
-                    
-				inner join OrdresFabricacio_Comunicats_Treballadors ofct on(ofct.CodiEmpresa=oc.CodiEmpresa and ofct.Exercici=oc.Exercici and 
-				ofct.Serie=oc.Serie and ofct.NumeroComanda=oc.NumeroComanda and ofct.CodiSeccio=oc.CodiSeccio and ofct.CodiParte=oc.CodiParte)
-					
 				WHERE oc.CodiEmpresa=? and oc.CodiClient=? and (oc.Data between ? and ? or oc.DataTancament between ? and ?) 
-				
 				group by  e.NomEmplaçament, oc.Domicili, op.NomOperacio, oc.Data, oc.DataTancament
 				order by oc.DataTancament";
 		

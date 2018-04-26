@@ -135,6 +135,7 @@ class Comunicats extends CI_Model{
 	}
 
 	public function getComunicats($dia,$clientcod,$domicili,$empreses,$dniusuari,$antics){
+		
 		$sql = 'SELECT oc.ComandaClient, oc.Equip, oc.Domicili, oc.CodiDepartament, oc.Exercici,oc.Serie,oc.NumeroComanda,
 		oc.CodiSeccio, e.CodiEmplaçament, e.CodiClient,e.CodiEmpresa, e.NomEmplaçament, e.Imatge, oc.Data, oc.CodiParte  
         from Emplaçaments e inner join 
@@ -274,16 +275,16 @@ class Comunicats extends CI_Model{
 		$this->db->update('OrdresFabricacio_Comunicats', $data);	
 	}
 	
-	public function emplacamentsavui($dniusuari,$data){
+	public function emplacamentsavui($empresa,$dniusuari,$data){
 		$sql = "SELECT oc.CodiEmpresa, oc.CodiClient, oc.Data, oc.DataTancament, if(oc.Equip is null or oc.Equip=\"\",\"\",oc.Equip) as Equip, emp.CodiEmplaçament, emp.NomEmplaçament 
 		FROM OrdresFabricacio_Comunicats oc 
 		inner join OrdresFabricacio_Comunicats_Treballadors oct on (oc.CodiParte=oct.CodiParte and oc.CodiEmpresa=oct.CodiEmpresa and 
 			oc.Exercici=oct.Exercici and oc.Serie=oct.serie and oc.NumeroComanda=oct.NumeroComanda and oc.CodiSeccio=oct.CodiSeccio) 
 		inner join Emplaçaments emp on(emp.CodiEmpresa=oc.CodiEmpresa and emp.CodiClient=oc.CodiClient and 
 			emp.CodiEmplaçament=oc.CodiEmplaçament) 
-		where oct.DNI = ? and oc.data=?";
+		where oc.CodiEmpresa=? and oct.DNI = ? and oc.data=?";
 
-		$resultat = $this->db->query($sql,array($dniusuari,$data));
+		$resultat = $this->db->query($sql,array($empresa,$dniusuari,$data));
 		
 		return $resultat->result_array();
 		

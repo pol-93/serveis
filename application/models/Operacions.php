@@ -293,7 +293,7 @@ class Operacions extends CI_Model{
 
 	}
 	
-	public function tancarparte($datausuari,$dataavui,$datatancament,$coords,$material,$tancarparte,$empresacod,$exercici,$serie,$numerocomanda,$codiseccio,$detall){
+	public function tancarparte($datausuari,$dataavui,$datatancament,$coords,$material,$tancarparte,$empresacod,$exercici,$serie,$numerocomanda,$codiseccio,$detall,$domicili){
 		if($datatancament==null){
 			$aux=null;
 		}	
@@ -317,7 +317,8 @@ class Operacions extends CI_Model{
 				'Altitud' => $coords[0],
 				'Longitud' => $coords[1],
 				'Materials' => $material,
-				'Detalls' => $detall
+				'Detalls' => $detall,
+				'Domicili' => $domicili
 			);
 		}else{
 			$data = array(
@@ -327,7 +328,8 @@ class Operacions extends CI_Model{
 				'Altitud' => $coords[0],
 				'Longitud' => $coords[1],
 				'Materials' => $material,
-				'Detalls' => $detall
+				'Detalls' => $detall,
+				'Domicili' => $domicili
 			);
 		}
 		$this->db->where('CodiParte', $tancarparte);

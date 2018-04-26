@@ -22,7 +22,6 @@ class LoginEmpresa extends CI_Controller{
 
 	public function index()
 	{	
-
 		$this->load->model("comunicats");
 		
 		$data = array(
@@ -30,18 +29,15 @@ class LoginEmpresa extends CI_Controller{
 		);
 	
 		$this->load->view("templates/header.php");
-		$this->load->view('Logintreballador',$data);
-		
+		$this->load->view('Logintreballador',$data);	
 	}
 	
 	public function validarteaempresa(){
 		$this->load->model("comunicats");
 		$usuari = $_POST["usuari"];
 		$clau = $_POST["clau"];	
-
 		$resultat = $this->comunicats->loginTreballador($usuari,$clau);
 		echo $resultat;
-		
 	}
 	
 	

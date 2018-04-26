@@ -101,10 +101,12 @@ class LoginEmpresaQr extends CI_Controller{
 		$dataactualYMD = new DateTime();
 		$dataactual = $dataactual->format('d-m-Y');
 		$dataactualYMD = $dataactualYMD->format('Y-m-d');	
+		
 		if(!isset($_SESSION["codiclient"])){
 			$_SESSION["codiclient"] = $_POST["CodiClient"];
 		}
-		$parte = $this->comunicats->getComunicatQr($_SESSION["codiclient"],$_POST["valor"],$_SESSION['empreses'],$_SESSION['dniusuari'],$dataactualYMD);
+		$parte = $this->comunicats->getComunicatQr($_POST["CodiClient"],$_POST["valor"],$_SESSION['empreses'],$_SESSION['dniusuari'],$dataactualYMD);
+	
 		redirect('/Entrada/operacionsambfotos/'.$parte[0][8].'/'.$parte[0][5].'/'.$dataactual.'/'.$parte[0][16].'/'.$parte[0][2].'/'.$parte[0][11].'/'.$parte[0][12].'/'.$parte[0][13].'/'.$parte[0][14].'/'.$parte[0][0], 'refresh');
 	}
 	
@@ -115,11 +117,10 @@ class LoginEmpresaQr extends CI_Controller{
 			$dataactualYMD = new DateTime();
 			$dataactualYMD = $dataactualYMD->format('Y-m-d');	
 			if($info == null){
-				$info = $this->comunicats->emplacamentsavui($_SESSION["dniusuari"],$dataactualYMD);
+				$info = $this->comunicats->emplacamentsavui($_SESSION["empreses"],$_SESSION["dniusuari"],$dataactualYMD);
 			}
 			$data = array(
-				'emplacaments' => $info,
-				'clients' =>  $this->comunicats->getClientsTreballador($_SESSION['empreses'],$_SESSION['dniusuari'])
+				'emplacaments' => $info
 			);
 			
 			

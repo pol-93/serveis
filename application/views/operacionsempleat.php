@@ -169,6 +169,18 @@
 		echo '</textarea>';
 		echo '</div>';
 		echo '</div>';
+		
+		if(!empty($registres) && ($registres[0]["Domicili"]=='' || $registres[0]["Domicili"]==null)){
+		echo '<div class="row" style="color:black;">';	
+		echo '<div class="col-md-12" style="margin-bottom:20px;">';
+		echo '<p style="clear:both;border-bottom:1px solid black;font-size:18px;font-family:helvetica;margin-bottom:10px;">Domicili</p>';
+		echo '<input type="text" style="width:100%;height:33px;font-family:helvetica;" id="ubicacio" name="ubicacio"></input>';
+		echo '</div>';
+		echo '</div>';
+		
+		
+		}
+		
 		echo '<div class="row" style="color:black;">';
 		echo '<div style="clear:both;font-size:18px;font-family:helvetica;" class="col-md-12">';
 		echo '<div class="row" style="color:black;">';
@@ -247,7 +259,7 @@
 					$.ajax({
 							method: "POST",
 							url: "<?php echo site_url()."/entrada/tancarparte";?>",
-							data: {empresacod:$("#bototancar").attr("data-empresacod"),codiseccio:$("#bototancar").attr("data-codiseccio"),tancarparte:$("#bototancar").attr("data-codiparte"),serie:$("#bototancar").attr("data-serie"),numerocomanda:$("#bototancar").attr("data-numcomanda"),exercici:$("#bototancar").attr("data-exercici"),datausuari:$("#bototancar").attr("data-datacomunicat"),coords:coordenades,material:$("#materials").val(),datatancament:datatancament,detall:$("#detall").val()},
+							data: {empresacod:$("#bototancar").attr("data-empresacod"),codiseccio:$("#bototancar").attr("data-codiseccio"),tancarparte:$("#bototancar").attr("data-codiparte"),serie:$("#bototancar").attr("data-serie"),numerocomanda:$("#bototancar").attr("data-numcomanda"),exercici:$("#bototancar").attr("data-exercici"),datausuari:$("#bototancar").attr("data-datacomunicat"),coords:coordenades,material:$("#materials").val(),datatancament:datatancament,detall:$("#detall").val(),domicili:$("#ubicacio").val()},
 							cache: false,
 							success: function(resultat){
 								console.log(resultat);

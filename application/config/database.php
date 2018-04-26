@@ -75,7 +75,7 @@ $query_builder = TRUE;
 //91.121.151.193
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
+	'hostname' => '91.121.151.193',
 	'username' => 'auriasoft',
 	'password' => 'G35t10$16',
 	'database' => 'AuriaSoft',
@@ -94,3 +94,5 @@ $db['default'] = array(
 	'failover' => array(),
 	'save_queries' => TRUE
 );
+
+
