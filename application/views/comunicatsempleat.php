@@ -2,7 +2,6 @@
 	<body>
 
 <div class="container">
-	
 	<div class="row" style="margin-bottom:20px;">
 		<a href="<?php echo site_url("LoginEmpresa/Index"); ?>"><input type="button" class="btn btn-danger" onclick="sortir()" style="float:right;display:block;margin-top:15px;margin-right:15px;" value="Sortir"></input></a>
 		<a href="<?php  echo site_url("/LoginEmpresaQr/carregarEmplacamentsValids"); ?>"><input type="button" class="btn btn-danger" style="float:right;display:block;margin-top:15px;margin-right:15px;" value="Veure emplaçaments on he d'anar avui"></input></a>
@@ -88,7 +87,7 @@
 						?>
 								<div class="row" style="padding:2px;padding-right:6px;margin-bottom:25px;">		
 									<a href="<?php echo site_url().'/entrada/operacionsambfotos/'.$tasques[$i]["CodiParte"].'/'.$tasques[$i]["Data"].'/'.$dataDP.'/'.$tasques[$i]["CodiDepartament"].'/'.$tasques[$i]["CodiEmpresa"].'/'.$tasques[$i]["Exercici"].'/'.$tasques[$i]["Serie"].'/'.$tasques[$i]["NumeroComanda"].'/'.$tasques[$i]["CodiSeccio"].'/'.$tasques[$i]["CodiEmplaçament"]; ?>">
-								<Button class="col-md-12 col-sm-12 col-xs-12 visible-xs visible-md visible-sm visible-lg emplasaments btn btn-gris">
+								<button class="col-md-12 col-sm-12 col-xs-12 visible-xs visible-md visible-sm visible-lg emplasaments btn btn-gris" style="border-radius:4px 4px 0px 0px;white-space: normal;">
 								<?php 
 								if($tasques[$i]["Imatge"]!=null){
 								?>
@@ -101,26 +100,35 @@
 								<?php
 								}
 								?>
-								<div class="col-md-7 col-sm-6">
-								<div style="text-align:left;" class="col-md-12 col-sm-12">Data: <?php echo $tasques[$i]["Data"]; ?></div>
-								<div style="text-align:left;" class="col-md-12 col-sm-12">Codi Parte: <?php echo $tasques[$i]["CodiParte"]; ?> </div>
-								<br>
-								<div style="text-align:left;" class="col-md-12 col-sm-12"><?php echo $tasques[$i]["NomEmplaçament"] . " -  " . $tasques[$i]["Equip"]; ?></div>
+								<div class="col-md-7 col-sm-6" style="margin-bottom:20px;">
+								<div style="text-align:left;" class="col-md-12 col-sm-12"><p class="negreta">Data:</p> <?php echo $tasques[$i]["Data"]; ?></div>
+								<div style="text-align:left;" class="col-md-12 col-sm-12"><p class="negreta">Codi Parte:</p> <?php echo $tasques[$i]["CodiParte"]; ?> </div>
+								
+								<div style="text-align:left;" class="col-md-12 col-sm-12"><p class="negreta">Emplacament:</p><?php echo $tasques[$i]["NomEmplaçament"] . " -  " . $tasques[$i]["Equip"]; ?></div>
 								<?php
 								if($tasques[$i]["Domicili"]!=''){
 								?>
-								<div style="text-align:left;" class="col-md-12 col-sm-12">Domicili: <?php echo $tasques[$i]["Domicili"]; ?> </div>	
+								<div style="text-align:left; word-break: break-all;height:50px;" class="col-md-12 col-sm-12 "><p class="negreta">Domicili:</p>  <?php echo $tasques[$i]["Domicili"]; ?> </div>	
 								<?php
 								}								
 								if($tasques[$i]["ComandaClient"]!=''){
 								?>
-								<div style="text-align:left;" class="col-md-12 col-sm-12">Comanda Client: <?php echo $tasques[$i]["ComandaClient"] ; ?></div>	
+								<div style="text-align:left;" class="col-md-12 col-sm-12"><p class="negreta">Comanda Client:</p> <?php echo $tasques[$i]["ComandaClient"] ; ?></div>	
 								<?php
 								}
 								?>
+								
 								</div>
-								</Button>
+								</button>
 								</a>
+								<?php
+								if($tasques[$i]["Altitud"]!='0' && $tasques[$i]["Longitud"]!='0'){
+								?>
+								
+								<a href="<?php  echo site_url("/Entrada/VisualitzarUbicacio/").$tasques[$i]["Altitud"]."/".$tasques[$i]["Longitud"]."/".$dataDP."/".$tasques[$i]["CodiDepartament"]."/".$tasques[$i]["CodiEmpresa"]."/".$tasques[$i]["Exercici"]."/".$tasques[$i]["Serie"]."/".$tasques[$i]["NumeroComanda"]."/".$tasques[$i]["CodiSeccio"]; ?>"><div style="font-family:helvetica;margin:0px;z-index:100;width:100%;border-radius:0px 0px 4px 4px" class="btn btn-danger"> Consultar ubicacio en Mapa </div></a>
+								<?php
+								}
+								?>
 								</div>
 								<?php
 						
@@ -154,85 +162,13 @@
 			?>
 			$("#datepicker3").datepicker();
 			$("#datepicker3").datepicker("option", "dateFormat", 'dd-mm-yy');
-			// getcomunicats($("#datepicker3").val(),$("#clientinput").val());
 		});
 		
 		function consultar(){
 			getcomunicats($("#datepicker3").val(),$("#clientinput").val());
 		}
 
-		// function getcomunicats(data,client){
-				// $("#tot").empty();
-				// $("#missatge").empty();
-				// domicili = $("#domicili").val();
-				// var string = "";
-				// $.ajax({
-						// url: "<?php echo site_url()."/entrada/gettasques"; ?>",
-						// method: "POST",
-						// data: {dia:data,codiclient:client,domicili:domicili,antics:$("#Comunicats").prop('checked')},
-						// success: function(resultat){
-							// console.log(resultat);
-						// if(resultat=='"noregistres"'){
-							// $("#bototancar").hide();
-							// $( "#posardata" ).hide();
-							// string+='<br>';
-							// string+='<p style="font-family:Helvetica;font-size:16px;">No hi ha cap comunicat obert per aquesta data</p>';
-							// string+='<input type="button" class="btn btn-danger" value="REOBRIR COMUNICAT" onclick="reobrir()"/>';
-						// }
-						// else{
-							// var algo = jQuery.parseJSON(resultat);
-							
-							// var aux = algo[0][8];
-							// var pintat = "NO";
-							// var i = 0;
-				// for (i = 0; i < algo.length; i++) {
-					// if(algo[i][8]!=aux){
-						// aux = algo[i][8];
-						// pintat = "NO";
-						// string+='</div>';				
-						// string+='</div>';
-						// string += '</div>';
-						// $("#tot").append(string);
-						// string = "";
-						// idoperacions="";
-					// }				
-					// if(algo[i][8]==aux && pintat=="NO"){
-						// string += '<div class="row" style="padding:2px;padding-right:6px;margin-bottom:25px;">';
-								// string += '<a href="<?php echo site_url().'/entrada/operacionsambfotos/';?>'+algo[i][8]+'/'+algo[i][5]+'/'+$("#datepicker3").val()+'/'+algo[i][16]+'/'+algo[i][2]+'/'+algo[i][11]+'/'+algo[i][12]+'/'+algo[i][13]+'/'+algo[i][14]+'/'+algo[i][0]+'">';
-								// string += '<Button class="col-md-12 col-sm-12 col-xs-12 visible-xs visible-md visible-sm visible-lg emplasaments btn btn-gris">';
-								// if(algo[0][4]!=null){
-								// string += '<div class="col-md-5 col-sm-6"><img width="250" '+algo[i][4]+'/></div>';
-								// }
-								// if(algo[0][4]==null || algo[0][4]==''){
-									// string += '<div class="col-md-5 col-sm-6"><img style="border-radius:5px;" width="150" src="<?php echo base_url("assets/img/ubicacio.png"); ?>"/></div>';
-								// }
-								// string += '<div class="col-md-7 col-sm-6">';
-								// string += '<div style="text-align:left;" class="col-md-12 col-sm-12">Data: '+ algo[i][5] + '</div>';
-								// string += '<div style="text-align:left;" class="col-md-12 col-sm-12">Codi Parte: '+ algo[i][8] + '</div>';
-								// string+='<br>';
-								// string += '<div style="text-align:left;" class="col-md-12 col-sm-12">'+ algo[i][3] + " -  " + algo[i][10] + '</div>';
-								// if(algo[i][15]!=''){
-								// string += '<div style="text-align:left;" class="col-md-12 col-sm-12">Domicili: '+  algo[i][15] + '</div>';	
-								// }
-								// if(algo[i][17]!=''){
-								// string += '<div style="text-align:left;" class="col-md-12 col-sm-12">Comanda Client: '+  algo[i][17] + '</div>';	
-								// }
-								// string += '</div>';
-								// string += '</Button>';
-								// string+='</a>';
-						// }
-				// }
-				
-					// $( "#posardata" ).show();
-					// $("#bototancar").show();	
-					
-				// }
-					// $("#tot").append(string);
-					 // $("body").show();											
-					// }
-				// });						
-			// }
-				
+		
 		function reobrir(numparte){
 			$.ajax({
 					method: "POST",

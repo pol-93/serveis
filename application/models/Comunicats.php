@@ -137,7 +137,7 @@ class Comunicats extends CI_Model{
 	public function getComunicats($dia,$clientcod,$domicili,$empreses,$dniusuari,$antics){
 		
 		$sql = 'SELECT oc.ComandaClient, oc.Equip, oc.Domicili, oc.CodiDepartament, oc.Exercici,oc.Serie,oc.NumeroComanda,
-		oc.CodiSeccio, e.CodiEmplaçament, e.CodiClient,e.CodiEmpresa, e.NomEmplaçament, e.Imatge, oc.Data, oc.CodiParte  
+		oc.CodiSeccio, oc.Altitud, oc.Longitud, e.CodiEmplaçament, e.CodiClient,e.CodiEmpresa, e.NomEmplaçament, e.Imatge, oc.Data, oc.CodiParte  
         from Emplaçaments e inner join 
 		OrdresFabricacio_Comunicats oc on (oc.CodiEmpresa=e.CodiEmpresa and oc.CodiEmplaçament=e.CodiEmplaçament and 
 		oc.CodiClient=e.CodiClient) 
@@ -288,6 +288,18 @@ class Comunicats extends CI_Model{
 		
 		return $resultat->result_array();
 		
+	}
+	
+	public function getAllComunicatsPerClientWithCoordinates($CodiDepartament,$CodiEmpresa,$Exercici,$Serie,$NumeroComanda,$CodiSeccio,$dniusuari){
+			$sql = "SELECT oc.*
+		FROM OrdresFabricacio_Comunicats oc 
+		inner join OrdresFabricacio_Comunicats_Treballadors oct on (oc.CodiParte=oct.CodiParte and oc.CodiEmpresa=oct.CodiEmpresa and 
+			oc.Exercici=oct.Exercici and oc.Serie=oct.serie and oc.NumeroComanda=oct.NumeroComanda and oc.CodiSeccio=oct.CodiSeccio) 
+		where oc.CodiEmpresa=? and oc.CodiDepartament=? and oc.Exercici=? and oc.Serie=? and oc.NumeroComanda=? and oc.CodiSeccio=?  and oct.DNI = ?";
+
+		$resultat = $this->db->query($sql,array($CodiEmpresa,$CodiDepartament,$Exercici,$Serie,$NumeroComanda,$CodiSeccio,$dniusuari));
+		
+		return $resultat->result_array();		
 	}
 	
 

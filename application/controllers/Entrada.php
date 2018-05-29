@@ -325,4 +325,19 @@ class Entrada extends CI_Controller {
 		
 		}
 		
+	Public function VisualitzarUbicacio($Latitude,$Longitude,$DataRetorn,$CodiDepartament,$CodiEmpresa,$Exercici,$Serie,$NumeroComanda,$CodiSeccio){
+		$this->load->model("Comunicats");
+		
+		$data = array(
+			"Comunicats" => $this->Comunicats->getAllComunicatsPerClientWithCoordinates($CodiDepartament,$CodiEmpresa,$Exercici,$Serie,$NumeroComanda,$CodiSeccio,$_SESSION['dniusuari']),
+			"Latitude" => $Latitude,
+			"Longitude" => $Longitude,
+			"DataRetorn" => $DataRetorn
+		);
+
+		$this->load->view("templates/header.php");
+		$this->load->view('Geolocation',$data);
+		
+	}
+		
 }

@@ -37,3 +37,9 @@ li:hover {
 .btn-gris:hover{
 	background-color: #E6E6E6 !important;
 }
+
+.negreta{
+	text-decoration:none !important;
+	font-weight: bolder;
+	font-family: helvetica;	
+}

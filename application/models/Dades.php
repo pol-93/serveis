@@ -285,7 +285,7 @@ class Dades extends CI_Model{
 				}
 			}
 			if($aux==1){
-				$sql = "SELECT c.* FROM Clients c join Demandes_serveis ds on (ds.CodiEmpresa=c.CodiEmpresa and ds.CodiClient=c.CodiClient) where ds.CodiEmpresa=8 group by c.CodiClient ";
+				$sql = "SELECT c.* FROM Clients c join Demandes_serveis ds on (ds.CodiEmpresa=c.CodiEmpresa and ds.CodiClient=c.CodiClient) where ds.CodiEmpresa=? group by c.CodiClient ";
 				$resultat = $this->db->query($sql,array($CodiEmpresa));
 				$a = array();
 				$i=0;
