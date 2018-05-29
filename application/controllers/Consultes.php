@@ -264,14 +264,12 @@ class Consultes extends CI_Controller{
 		
 		public function Descarregararxiu($idarx,$tipus){
 			$this->load->model("Dades");
-		
-			
+
 			$dades = $this->Dades->getarxiu($idarx,$tipus);
-			//$dades[0];
-			//$dades[1];
-			
-			//header("Content-Type: $dades[0]");
-			header('Content-Disposition: attachment; filename='.$dades[1].'');
+
+			$fitxer = preg_replace('/\s+/', '', $dades[1]);
+		
+			header('Content-Disposition: attachment; filename='.$fitxer.'');
 			echo $dades[2];
 
 			
